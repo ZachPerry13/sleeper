@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ team }} Breakdown (Matchup {{ matchup_id }}, Week {{ week }})</title>
+</head>
+<body>
+    <h1>{{ team }} - Matchup {{ matchup_id }} (Week {{ week }})</h1>
+
+    <h2>Starters</h2>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Team</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for player in starter_details %}
+                <tr>
+                    <td>{{ player.name }}</td>
+                    <td>{{ player.position }}</td>
+                    <td>{{ player.team }}</td>
+                    <td>{{ player.points }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <br>
+    <a href="/">Back to Overview</a>
+</body>
+</html>

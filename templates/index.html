@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zach's Sleeper Charts</title>
+    <script src="https://cdn.plot.ly/plotly-2.20.0.min.js"></script>
+</head>
+<body>
+    <h1>Zach's Sleeper Charts</h1>
+    <h2>Total Scores Grouped by Matchup (Week {{ week }})</h2>
+    <!-- Graph Container -->
+    <div id="chart"></div>
+
+    <script>
+        // Data from Flask
+        const teamNames = {{ team_names | tojson }};
+        const scores = {{ scoress | tojson }};
+        const matchupIds = {{ matchup_ids | tojson }};
+        const week = {{ week }};  // Pass the current week from Flask to JavaScript
+    
+        // Generate a color map for matchups
+        matchup_colors = {
+            '1': '#FF5733',
+            '2': '#33FF57',
+            '3': '#3357FF',
+            '4': '#FFC300',
+        }
+    
+        // Create Plotly Data
+        const data = [{
+            x: teamNames,
+            y: scores,
+            type: 'bar',
+            text: matchupIds.map(id => `Matchup ${id}`),
+            hoverinfo: 'text+y',
+            marker: { color: 'skyblue' }
+        }];
+    
+        // Plotly Layout
+        const layout = {
+            title: `Team Scores (Week {{ week }})`,
+            xaxis: {
+                title: 'Team Names',
+                tickangle: -45,
+            },
+            yaxis: {
+                title: 'Points',
+            }
+        };
+    
+        // Render Plotly Chart
+        Plotly.newPlot('chart', data, layout);
+    
+        // Click Event Listener
+        document.getElementById('chart').on('plotly_click', function(data) {
+            const point = data.points[0];
+            const teamName = point.x; // Team Name from x-axis
+            const matchupId = point.text.replace('Matchup ', ''); 
+    
+            // Redirect to the breakdown route, passing the team, matchup, and week
+            window.location.href = `/breakdown?team=${teamName}&matchup=${matchupId}&week=${week}`;
+        });
+    </script>
+    
+    
+        <form method="POST" action="/change_week">
+            <label for="week">Select Week:</label>
+            <select name="week" id="week">
+                {% for i in range(1, 15) %}
+                    <option value="{{ i }}" {% if i == week %}selected{% endif %}>Week {{ i }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Change Week</button>
+        </form>
+        <footer><br>Disclaimer:<br> I built this in one night and Sleeper's API is Dogwater, this could break any time and is held together by glue and duct tape
+        <br> <a href="https://www.w3schools.com/" target="_blank">Visit W3Schools!</a>
+        </footer>
+</body>
+</html>
