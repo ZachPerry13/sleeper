@@ -16,5 +16,8 @@ EXPOSE 5000
 # Define environment variable to indicate the app is running in production mode
 ENV FLASK_ENV=production
 
+# Define App
+ENV FLASK_APP=app.py
+
 # Run the application
-CMD ["flask", "run", "--host=0.0.0.0", "--port=5000"]
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
